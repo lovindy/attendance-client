@@ -1,34 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSignupMutation } from '../../services/authApi';
 import { TextField, Button, Grid, Typography, Paper, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Logo from '../../data/img/Logo.png';
+import { useForm } from 'react-hook-form';
 
 const SignupForm = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
   const [signup, { isLoading, isError, error, data }] = useSignupMutation();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    passwordConfirm: '',
-    address: '',
-    dob: '',
-    first_name: '',
-    last_name: '',
-    phone_number: '',
-    school_name: '',
-    school_address: '',
-    school_phone_number: '',
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (formData) => {
     if (formData.password !== formData.passwordConfirm) {
       alert('Passwords do not match!');
       return;
@@ -65,121 +53,128 @@ const SignupForm = () => {
           <Typography variant="h5" gutterBottom align="center">
             Sign Up
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  {...register('email', { required: 'Email is required' })}
                   type="email"
-                  required
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
+                  {...register('password', {
+                    required: 'Password is required',
+                  })}
                   type="password"
-                  required
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Confirm Password"
-                  name="passwordConfirm"
-                  value={formData.passwordConfirm}
-                  onChange={handleChange}
+                  {...register('passwordConfirm', {
+                    required: 'Confirm Password is required',
+                  })}
                   type="password"
-                  required
+                  error={!!errors.passwordConfirm}
+                  helperText={errors.passwordConfirm?.message}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="First Name"
-                  name="first_name"
-                  value={formData.first_name}
-                  onChange={handleChange}
-                  required
+                  {...register('first_name', {
+                    required: 'First Name is required',
+                  })}
+                  error={!!errors.first_name}
+                  helperText={errors.first_name?.message}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Last Name"
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleChange}
-                  required
+                  {...register('last_name', {
+                    required: 'Last Name is required',
+                  })}
+                  error={!!errors.last_name}
+                  helperText={errors.last_name?.message}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  required
+                  {...register('address', { required: 'Address is required' })}
+                  error={!!errors.address}
+                  helperText={errors.address?.message}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Phone Number"
-                  name="phone_number"
-                  value={formData.phone_number}
-                  onChange={handleChange}
-                  required
+                  {...register('phone_number', {
+                    required: 'Phone Number is required',
+                  })}
+                  error={!!errors.phone_number}
+                  helperText={errors.phone_number?.message}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Date of Birth"
-                  name="dob"
-                  value={formData.dob}
-                  onChange={handleChange}
+                  {...register('dob', {
+                    required: 'Date of Birth is required',
+                  })}
                   type="date"
                   InputLabelProps={{ shrink: true }}
-                  required
+                  error={!!errors.dob}
+                  helperText={errors.dob?.message}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="School Name"
-                  name="school_name"
-                  value={formData.school_name}
-                  onChange={handleChange}
-                  required
+                  {...register('school_name', {
+                    required: 'School Name is required',
+                  })}
+                  error={!!errors.school_name}
+                  helperText={errors.school_name?.message}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="School Address"
-                  name="school_address"
-                  value={formData.school_address}
-                  onChange={handleChange}
-                  required
+                  {...register('school_address', {
+                    required: 'School Address is required',
+                  })}
+                  error={!!errors.school_address}
+                  helperText={errors.school_address?.message}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="School Phone Number"
-                  name="school_phone_number"
-                  value={formData.school_phone_number}
-                  onChange={handleChange}
-                  required
+                  {...register('school_phone_number', {
+                    required: 'School Phone Number is required',
+                  })}
+                  error={!!errors.school_phone_number}
+                  helperText={errors.school_phone_number?.message}
                 />
               </Grid>
             </Grid>

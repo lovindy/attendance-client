@@ -1,24 +1,23 @@
-// src/pages/auth/ForgotPassword.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForgotPasswordMutation } from '../../services/authApi';
+import { useUpdatePasswordMutation } from '../../services/authApi';
 import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
 
-const ForgotPassword = () => {
+const UpdatePassword = () => {
   const navigate = useNavigate();
-  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
-  const [email, setEmail] = useState('');
+  const [updatePassword, { isLoading }] = useUpdatePasswordMutation();
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await forgotPassword({ email }).unwrap();
-      navigate('/verify-email'); // Redirect to the CheckEmail page
+      await updatePassword({ currentPassword, newPassword }).unwrap();
+      navigate('/profile'); // Redirect to a profile or dashboard page
     } catch (error) {
-      setError('Failed to reset password. Please try again.');
-      console.error('Failed to reset password:', error);
+      setError('Failed to update password. Please try again.');
+      console.error('Failed to update password:', error);
     }
   };
 
@@ -32,16 +31,28 @@ const ForgotPassword = () => {
       <Grid item xs={12} sm={8} md={5}>
         <Paper elevation={6} style={{ padding: '2rem' }}>
           <Typography variant="h5" gutterBottom align="center">
-            Forgot Password
+            Update Password
           </Typography>
           <form onSubmit={handleSubmit}>
             <Box mb={2}>
               <TextField
-                label="Email"
+                label="Current Password"
+                type="password"
                 variant="outlined"
                 fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                required
+              />
+            </Box>
+            <Box mb={2}>
+              <TextField
+                label="New Password"
+                type="password"
+                variant="outlined"
+                fullWidth
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 required
               />
             </Box>
@@ -58,19 +69,14 @@ const ForgotPassword = () => {
                 fullWidth
                 disabled={isLoading}
               >
-                {isLoading ? 'Sending...' : 'Reset Password'}
+                {isLoading ? 'Updating...' : 'Update Password'}
               </Button>
             </Box>
           </form>
-          <Box mt={2} textAlign="center">
-            <Typography variant="body2">
-              Remembered your password? <Link to="/login">Log In</Link>
-            </Typography>
-          </Box>
         </Paper>
       </Grid>
     </Grid>
   );
 };
 
-export default ForgotPassword;
+export default UpdatePassword;
